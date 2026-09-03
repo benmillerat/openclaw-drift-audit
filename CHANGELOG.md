@@ -16,6 +16,7 @@ All notable changes to this project are documented here. Dates use ISO 8601.
 
 - 2026-09-03: Added repository metadata and topics, enabled automatic branch cleanup, retained read-only Actions token permissions, and enabled Dependabot alerts and security updates.
 - 2026-09-03: Confirmed that branch rulesets, secret scanning, push protection, and private vulnerability reporting require either public visibility or a GitHub plan upgrade for this repository; visibility remains private.
+- 2026-09-03: Verified the documented Git clone installation in a clean Codex skills directory with all 91 tests and an exact skill-fingerprint match.
 
 ## [0.1.0] - 2026-09-03
 
