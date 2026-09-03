@@ -8,6 +8,10 @@ All notable changes to this project are documented here. Dates use ISO 8601.
 
 - MIT License for the project and contributions.
 
+### Fixed
+
+- Include synthetic installed-package manifests required by dependency and collector tests in clean repository checkouts.
+
 ## [0.1.0] - 2026-09-03
 
 ### Added
