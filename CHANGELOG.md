@@ -4,7 +4,9 @@ All notable changes to this project are documented here. Dates use ISO 8601.
 
 ## [Unreleased]
 
-- No unreleased functional changes.
+### Added
+
+- MIT License for the project and contributions.
 
 ## [0.1.0] - 2026-09-03
 

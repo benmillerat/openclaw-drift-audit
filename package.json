@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "Independent Codex skill for version-aware, audit-only OpenClaw drift analysis.",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "type": "module",
   "engines": {
     "node": ">=22.13.0"

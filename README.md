@@ -1,6 +1,7 @@
 # OpenClaw Drift Audit
 
 [![CI](https://github.com/benmillerat/openclaw-drift-audit/actions/workflows/ci.yml/badge.svg)](https://github.com/benmillerat/openclaw-drift-audit/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 `openclaw-drift-audit` is an independent Codex skill for auditing long-lived OpenClaw installations. It discovers the installed components first, derives version- and context-specific baselines from owner sources, and reports configuration, provenance, migration, dependency, source, and artifact drift without applying repairs.
 
@@ -181,4 +182,4 @@ See [CHANGELOG.md](CHANGELOG.md) for shipped changes and [the public-release che
 
 ## License
 
-No open-source license has been selected yet. Until a `LICENSE` file is added, copyright law reserves all rights and this repository must not be presented as open-source software. Selecting and adding a license is a required step before the planned public release.
+OpenClaw Drift Audit is available under the [MIT License](LICENSE).

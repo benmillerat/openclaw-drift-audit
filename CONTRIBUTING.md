@@ -4,7 +4,7 @@ OpenClaw Drift Audit is a security-sensitive Public Preview. Small, evidence-bac
 
 ## Before contributing
 
-No open-source license has been selected yet. Until a `LICENSE` file is added, please discuss proposed third-party contributions in an issue and do not submit substantive code under an assumed license.
+By submitting a contribution, you agree that it is licensed under the repository's [MIT License](LICENSE).
 
 For security vulnerabilities, follow [SECURITY.md](SECURITY.md) instead of opening a public issue.
 

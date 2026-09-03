@@ -4,8 +4,8 @@ Complete this checklist before changing the GitHub repository from private to pu
 
 ## Required blockers
 
-- [ ] Select an open-source license and add a standard `LICENSE` file. Apache-2.0 includes an explicit patent grant; MIT is shorter and permissive. This is an owner decision.
-- [ ] Remove the temporary `UNLICENSED` package metadata and update the README license section.
+- [x] Select the MIT License and add a standard `LICENSE` file.
+- [x] Replace the temporary `UNLICENSED` package metadata and update the README license section.
 - [ ] Review the complete Git history and current tree for private paths, identities, credentials, configs, databases, logs, memories, transcripts, and generated audit artifacts.
 - [ ] Run `npm test`, syntax checks, the Codex skill validator, and the maintainer release gate on the exact commit intended for publication.
 - [ ] Verify that the README's capability and platform claims match recorded evidence.
