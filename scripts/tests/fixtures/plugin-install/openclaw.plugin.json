@@ -1,0 +1,44 @@
+{
+  "id": "example-plugin",
+  "name": "Example Plugin",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "enabled": { "type": "boolean", "default": true },
+      "contextThreshold": { "type": "number", "minimum": 0, "maximum": 1 },
+      "contextThresholdOverrides": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "match": {
+              "type": "object",
+              "properties": {
+                "modelContextWindowMin": { "type": "integer", "minimum": 1 }
+              }
+            }
+          }
+        }
+      },
+      "cacheAwareCompaction": {
+        "type": "object",
+        "properties": {
+          "hotCacheBudgetHeadroomRatio": { "type": "number", "minimum": 0, "maximum": 0.95 }
+        }
+      },
+      "accounts": {
+        "type": "object",
+        "properties": {
+          "person@example.test": {
+            "type": "object",
+            "properties": {
+              "enabled": { "type": "boolean" }
+            }
+          }
+        }
+      },
+      "apiToken": { "type": "string", "default": "must-not-leak" }
+    }
+  }
+}

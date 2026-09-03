@@ -1,0 +1,19 @@
+{
+  // The scanner must accept JSON5 without evaluating it.
+  $include: ["./base.json5", "./plugins.json5"],
+  agents: {
+    defaults: {
+      timeoutSeconds: 600,
+      workspace: "/private/example-workspace",
+    },
+  },
+  gateway: { port: 18789 },
+  env: { API_KEY: "sk-preview-secret-must-not-leak" },
+  channels: {
+    telegram: {
+      accounts: {
+        privateAccount: { enabled: true, botToken: "123456:private-token" },
+      },
+    },
+  },
+}

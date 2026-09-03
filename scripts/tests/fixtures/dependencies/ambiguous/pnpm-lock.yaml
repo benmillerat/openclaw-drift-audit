@@ -1,0 +1,20 @@
+---
+lockfileVersion: '9.0'
+importers:
+  .:
+    dependencies:
+      alpha:
+        specifier: ^1.0.0
+        version: 1.2.3
+packages: {}
+snapshots: {}
+---
+lockfileVersion: '9.0'
+importers:
+  .:
+    dependencies:
+      alpha:
+        specifier: ^1.0.0
+        version: 1.2.4
+packages: {}
+snapshots: {}

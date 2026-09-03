@@ -1,0 +1,19 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+node_modules/
+coverage/
+*.log
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+*.tgz
+*.tar.gz
+
+# Audit output may contain installation metadata even after redaction.
+/analysis.json
+/audit.json
+/evidence.json
+/report.md

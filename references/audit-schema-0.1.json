@@ -1,0 +1,1095 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:openclaw-drift-audit:schema:0.1.1",
+  "title": "OpenClaw Drift Audit Public Preview 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kind", "preview", "run", "export", "target", "operatingContext", "components", "capabilities", "coverage", "sources", "baselineSnapshot", "baselines", "rules", "observations", "findings", "migrationChains", "migrationSourceInventory", "dependencies", "sourceState", "configurationSummary", "plugins", "repairHandoffs", "redaction", "networkFreshness", "consistency", "diagnostics"],
+  "properties": {
+    "schemaVersion": { "const": "0.1.1" },
+    "kind": { "const": "openclaw-drift-audit" },
+    "preview": { "const": true },
+    "run": { "$ref": "#/$defs/run" },
+    "export": { "$ref": "#/$defs/export" },
+    "target": { "$ref": "#/$defs/target" },
+    "operatingContext": { "$ref": "#/$defs/operatingContext" },
+    "components": { "type": "array", "items": { "$ref": "#/$defs/component" } },
+    "capabilities": { "type": "array", "items": { "$ref": "#/$defs/capability" } },
+    "coverage": { "$ref": "#/$defs/coverage" },
+    "sources": { "type": "array", "items": { "$ref": "#/$defs/source" } },
+    "baselineSnapshot": { "$ref": "#/$defs/baselineSnapshot" },
+    "baselines": { "type": "array", "items": { "$ref": "#/$defs/baseline" } },
+    "rules": { "type": "array", "items": { "$ref": "#/$defs/rule" } },
+    "observations": { "type": "array", "items": { "$ref": "#/$defs/observation" } },
+    "findings": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+    "migrationChains": { "type": "array", "items": { "$ref": "#/$defs/migrationChain" } },
+    "migrationSourceInventory": { "type": "array", "items": { "$ref": "#/$defs/migrationSource" } },
+    "dependencies": { "type": "array", "items": { "$ref": "#/$defs/dependencyAudit" } },
+    "sourceState": { "$ref": "#/$defs/sourceState" },
+    "configurationSummary": { "$ref": "#/$defs/configurationSummary" },
+    "plugins": { "$ref": "#/$defs/pluginEvidence" },
+    "repairHandoffs": { "type": "array", "items": { "$ref": "#/$defs/repairHandoff" } },
+    "redaction": { "$ref": "#/$defs/redaction" },
+    "networkFreshness": { "$ref": "#/$defs/networkFreshness" },
+    "consistency": { "type": "array", "items": { "$ref": "#/$defs/consistencyRecord" } },
+    "diagnostics": { "type": "array", "items": { "$ref": "#/$defs/diagnostic" } }
+  },
+  "$defs": {
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "profiles", "auditLogicVersion", "observationWindow", "intentionalTargetMutation", "networkUsed", "persistentArtifactsCreated", "metadataOnly", "budgets"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "profiles": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["offline-core", "network-freshness"] } },
+        "auditLogicVersion": { "const": "0.1.1" },
+        "metadataOnly": { "type": "boolean" },
+        "observationWindow": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["startedAt", "endedAt"],
+          "properties": {
+            "startedAt": { "type": "string", "format": "date-time" },
+            "endedAt": { "type": "string", "format": "date-time" }
+          }
+        },
+        "intentionalTargetMutation": { "const": false },
+        "networkUsed": { "type": "boolean" },
+        "persistentArtifactsCreated": { "type": "boolean" },
+        "budgets": { "$ref": "#/$defs/budgets" },
+        "targetGuard": { "$ref": "#/$defs/targetWriteGuard" }
+      }
+    },
+    "export": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "delivery", "authorization", "retention", "localPathExportSupported", "directoryFingerprint"],
+      "properties": {
+        "mode": { "const": "portable-redacted" },
+        "delivery": { "enum": ["interactive-stdout", "persistent-file"] },
+        "authorization": { "enum": ["not-required", "explicit"] },
+        "retention": { "type": "string", "minLength": 1 },
+        "localPathExportSupported": { "const": false },
+        "directoryFingerprint": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["limit", "used", "status", "coverageGapId"],
+      "properties": {
+        "limit": { "type": "integer", "minimum": 1 },
+        "used": { "type": ["integer", "null"], "minimum": 0 },
+        "status": { "enum": ["within-budget", "exceeded", "not-measured"] },
+        "coverageGapId": { "type": ["string", "null"] }
+      }
+    },
+    "budgets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["timeMs", "ioBytes", "semanticItems"],
+      "properties": {
+        "timeMs": { "$ref": "#/$defs/budget" },
+        "ioBytes": { "$ref": "#/$defs/budget" },
+        "semanticItems": { "$ref": "#/$defs/budget" }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["configPath", "selectedPackageRoot", "status", "launchers", "packages"],
+      "properties": {
+        "discoveryVersion": { "type": "string" },
+        "platform": { "$ref": "#/$defs/platform" },
+        "stateDir": { "type": "string" },
+        "configPath": { "type": "string" },
+        "configExists": { "type": "boolean" },
+        "launchers": { "type": "array", "items": { "$ref": "#/$defs/launcher" } },
+        "packages": { "type": "array", "items": { "$ref": "#/$defs/targetPackage" } },
+        "selectedPackageRoot": { "type": ["string", "null"] },
+        "status": { "type": "string", "minLength": 1 },
+        "selection": { "$ref": "#/$defs/targetSelection" },
+        "candidateFingerprint": { "type": "string" },
+        "graphResolution": { "type": "string" },
+        "writeGuard": { "$ref": "#/$defs/targetWriteGuard" }
+      }
+    },
+    "platform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["os", "arch", "node"],
+      "properties": {
+        "os": { "type": "string" },
+        "arch": { "type": "string" },
+        "node": { "type": "string" }
+      }
+    },
+    "launcher": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "realPath", "kind", "packageRoots"],
+      "properties": {
+        "path": { "type": "string" },
+        "realPath": { "type": "string" },
+        "kind": { "type": "string" },
+        "packageRoots": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    },
+    "targetPackage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rootDir", "lifecycleGuards"],
+      "properties": {
+        "rootDir": { "type": "string" },
+        "packageJsonPath": { "type": "string" },
+        "packageJsonSha256": { "type": "string" },
+        "name": { "type": ["string", "null"] },
+        "version": { "type": ["string", "null"] },
+        "versionPrereleaseClass": { "type": ["string", "null"] },
+        "schemaVersions": { "type": "array", "items": { "$ref": "#/$defs/namedScalar" } },
+        "repository": { "type": ["string", "null"] },
+        "homepage": { "type": ["string", "null"] },
+        "releaseChannel": { "type": "string" },
+        "releaseChannelSource": { "type": "string" },
+        "installKind": { "type": "string" },
+        "lifecycleGuards": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "buildInfo": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/buildInfo" }
+          ]
+        },
+        "error": { "type": "string" }
+      }
+    },
+    "buildInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string" },
+        "sha256": { "type": "string" },
+        "version": { "type": ["string", "null"] },
+        "commit": { "type": ["string", "null"] },
+        "builtAt": { "type": ["string", "null"] },
+        "error": { "type": "string" }
+      }
+    },
+    "namedScalar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "value"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "value": { "type": ["string", "number", "boolean", "null"] }
+      }
+    },
+    "targetSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["packageRootSource", "stateDirSource", "configPathSource", "assurance", "unresolvedRuntimeIdentities"],
+      "properties": {
+        "packageRootSource": { "type": "string" },
+        "stateDirSource": { "type": "string" },
+        "configPathSource": { "type": "string" },
+        "runtimeCwdSource": { "type": "string" },
+        "assurance": { "type": "string" },
+        "unresolvedRuntimeIdentities": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    },
+    "targetWriteGuard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "salt", "complete", "unresolvedCount", "roots"],
+      "properties": {
+        "algorithm": { "const": "sha256-salted-path-v1" },
+        "salt": { "type": "string", "minLength": 16 },
+        "complete": { "type": "boolean" },
+        "unresolvedCount": { "type": "integer", "minimum": 0 },
+        "roots": { "type": "array", "items": { "$ref": "#/$defs/targetWriteGuardRoot" }, "uniqueItems": true }
+      }
+    },
+    "targetWriteGuardRoot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["alias", "kind", "roles", "fingerprint"],
+      "properties": {
+        "alias": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["file", "directory"] },
+        "roles": { "type": "array", "items": { "type": "string" }, "minItems": 1, "uniqueItems": true },
+        "fingerprint": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "fileFingerprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "exists": { "type": ["boolean", "null"] },
+        "type": { "type": "string" },
+        "size": { "type": "string" },
+        "mtimeNs": { "type": "string" },
+        "ino": { "type": "string" },
+        "mode": { "type": "string" },
+        "sha256": { "type": ["string", "null"] },
+        "oversized": { "type": "boolean" },
+        "stable": { "type": "boolean" },
+        "error": { "type": "string" }
+      }
+    },
+    "configurationSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "root", "authoredEntryCount", "resolvedEntryCount", "authoredEntries", "resolvedEntries", "resolvedSameAsAuthored", "includeFiles", "includeEdges", "diagnostics"],
+      "properties": {
+        "status": { "type": "string" },
+        "root": { "type": "string" },
+        "authoredEntryCount": { "type": "integer", "minimum": 0 },
+        "resolvedEntryCount": { "type": "integer", "minimum": 0 },
+        "authoredEntries": { "type": "array", "items": { "$ref": "#/$defs/configEntry" } },
+        "resolvedEntries": { "type": "array", "items": { "$ref": "#/$defs/configEntry" } },
+        "resolvedSameAsAuthored": { "type": "boolean" },
+        "includeFiles": { "type": "array", "items": { "$ref": "#/$defs/includeFile" } },
+        "includeEdges": { "type": "array", "items": { "$ref": "#/$defs/includeEdge" } },
+        "diagnostics": { "type": "array", "items": { "$ref": "#/$defs/configDiagnostic" } }
+      }
+    },
+    "configEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pointer", "type", "sources"],
+      "properties": {
+        "pointer": { "type": "string" },
+        "type": { "enum": ["null", "boolean", "object", "array", "number", "integer", "string"] },
+        "sources": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "keys": { "type": "integer", "minimum": 0 },
+        "items": { "type": "integer", "minimum": 0 },
+        "present": { "type": "boolean" },
+        "disclosure": { "enum": ["clear", "redacted-secret", "redacted-private"] },
+        "value": { "type": ["string", "number", "boolean", "null"] },
+        "lengthBucket": { "type": "string" },
+        "opaqueFingerprint": { "type": "string" }
+      }
+    },
+    "includeFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "bytes", "sha256", "stable", "before", "after"],
+      "properties": {
+        "path": { "type": "string" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "stable": { "type": "boolean" },
+        "before": { "$ref": "#/$defs/fileFingerprint" },
+        "after": { "$ref": "#/$defs/fileFingerprint" }
+      }
+    },
+    "includeEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "targets", "pointer", "kind", "hasSiblingOverrides"],
+      "properties": {
+        "from": { "type": "string" },
+        "targets": { "type": "array", "items": { "type": "string" } },
+        "pointer": { "type": "string" },
+        "kind": { "type": "string" },
+        "hasSiblingOverrides": { "type": "boolean" }
+      }
+    },
+    "configDiagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "severity"],
+      "properties": {
+        "code": { "type": "string" },
+        "severity": { "enum": ["info", "warning", "error"] },
+        "message": { "type": "string" }
+      }
+    },
+    "migrationSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "present", "sourceClass", "sourceKind", "bytes", "sha256", "stable"],
+      "properties": {
+        "path": { "type": "string" },
+        "present": { "type": "boolean" },
+        "sourceClass": { "type": "string" },
+        "sourceKind": { "type": "string" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "stable": { "type": "boolean" }
+      }
+    },
+    "consistencyRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "stable", "before", "after"],
+      "properties": {
+        "path": { "type": "string" },
+        "stable": { "type": "boolean" },
+        "before": { "$ref": "#/$defs/fileFingerprint" },
+        "after": { "$ref": "#/$defs/fileFingerprint" }
+      }
+    },
+    "evidenceGap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code"],
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "reason": { "type": "string" },
+        "componentId": { "type": "string" },
+        "dataClass": { "type": "string" },
+        "dependency": { "type": "string" },
+        "kind": { "type": "string" },
+        "lockfile": { "type": "string" },
+        "packageManagerHint": { "type": ["string", "null"] },
+        "declared": { "type": "integer", "minimum": 0 },
+        "limit": { "type": "integer", "minimum": 0 },
+        "observed": { "type": "integer", "minimum": 0 },
+        "documentIndex": { "type": ["integer", "null"], "minimum": 0 },
+        "pluginId": { "type": "string" },
+        "requiredAction": { "type": "string" },
+        "identity": { "type": "string" },
+        "sourceClass": { "type": "string" },
+        "path": { "type": "string" }
+      }
+    },
+    "dependencyAudit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["componentId", "checks", "lockfiles", "lockSelection", "gaps"],
+      "properties": {
+        "componentId": { "type": "string" },
+        "packageJson": { "$ref": "#/$defs/dependencyPackageJson" },
+        "checks": { "type": "array", "items": { "$ref": "#/$defs/dependencyCheck" } },
+        "lockfiles": { "type": "array", "items": { "$ref": "#/$defs/dependencyLockfile" } },
+        "lockSelection": { "$ref": "#/$defs/lockSelection" },
+        "gaps": { "type": "array", "items": { "$ref": "#/$defs/evidenceGap" } }
+      }
+    },
+    "dependencyPackageJson": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "name", "version", "packageManager"],
+      "properties": {
+        "path": { "type": "string" },
+        "sha256": { "type": "string" },
+        "name": { "type": ["string", "null"] },
+        "version": { "type": ["string", "null"] },
+        "packageManager": { "type": ["string", "null"] }
+      }
+    },
+    "dependencyCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "optional", "selecting", "name", "requested", "status", "installed", "lock"],
+      "properties": {
+        "kind": { "type": "string" },
+        "optional": { "type": "boolean" },
+        "selecting": { "type": "boolean" },
+        "name": { "type": "string" },
+        "requested": { "type": "string" },
+        "status": { "type": "string" },
+        "reason": { "type": "string" },
+        "installed": {
+          "anyOf": [
+            { "type": "null" },
+            { "$ref": "#/$defs/installedDependency" }
+          ]
+        },
+        "lock": { "$ref": "#/$defs/dependencyLock" }
+      }
+    },
+    "installedDependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "packageJsonPath", "packageJsonSha256", "resolvedRoot", "nameStatus"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": ["string", "null"] },
+        "packageJsonPath": { "type": "string" },
+        "packageJsonSha256": { "type": "string" },
+        "resolvedRoot": { "type": "string" },
+        "nameStatus": { "type": "string" }
+      }
+    },
+    "dependencyLock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": { "type": "string" },
+        "specifier": { "type": ["string", "null"] },
+        "version": { "type": ["string", "null"] },
+        "hasIntegrity": { "type": ["boolean", "null"] },
+        "declaredStatus": { "type": "string" },
+        "declaredReason": { "type": "string" },
+        "installedStatus": { "type": "string" }
+      }
+    },
+    "dependencyLockfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "kind", "manager", "status", "candidates", "documents"],
+      "properties": {
+        "path": { "type": "string" },
+        "kind": { "type": "string" },
+        "manager": { "type": "string" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "type": "string" },
+        "status": { "type": "string" },
+        "error": { "type": "string" },
+        "reason": { "type": "string" },
+        "adapter": { "type": ["string", "null"] },
+        "formatVersion": { "type": ["string", "null"] },
+        "candidates": { "type": "array", "items": { "$ref": "#/$defs/lockCandidate" } },
+        "documents": { "type": "array", "items": { "$ref": "#/$defs/lockDocument" } }
+      }
+    },
+    "lockCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "importer", "documentIndex", "manifestComparison"],
+      "properties": {
+        "id": { "type": "string" },
+        "importer": { "type": "string" },
+        "documentIndex": { "type": ["integer", "null"], "minimum": 0 },
+        "manifestComparison": { "$ref": "#/$defs/manifestComparison" }
+      }
+    },
+    "manifestComparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "missing", "extra", "specifierMismatches"],
+      "properties": {
+        "status": { "type": "string" },
+        "missing": { "type": "array", "items": { "$ref": "#/$defs/dependencyIdentity" } },
+        "extra": { "type": "array", "items": { "$ref": "#/$defs/dependencyIdentity" } },
+        "specifierMismatches": { "type": "array", "items": { "$ref": "#/$defs/specifierMismatch" } }
+      }
+    },
+    "dependencyIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "name"],
+      "properties": { "kind": { "type": "string" }, "name": { "type": "string" } }
+    },
+    "specifierMismatch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "name", "declared", "locked"],
+      "properties": {
+        "kind": { "type": "string" },
+        "name": { "type": "string" },
+        "declared": { "type": "string" },
+        "locked": { "type": "string" }
+      }
+    },
+    "lockDocument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["documentIndex", "status", "formatVersion"],
+      "properties": {
+        "documentIndex": { "type": "integer", "minimum": 0 },
+        "status": { "type": "string" },
+        "reason": { "type": "string" },
+        "formatVersion": { "type": ["string", "null"] }
+      }
+    },
+    "lockSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": { "type": "string" },
+        "manager": { "type": "string" },
+        "lockfile": { "type": "string" },
+        "path": { "type": "string" },
+        "adapter": { "type": "string" },
+        "formatVersion": { "type": ["string", "null"] },
+        "importer": { "type": "string" },
+        "documentIndex": { "type": ["integer", "null"], "minimum": 0 },
+        "selectedBy": { "type": "string" },
+        "packageManagerHint": { "type": ["string", "null"] }
+      }
+    },
+    "sourceState": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "git": { "$ref": "#/$defs/gitState" },
+        "releaseBinding": { "$ref": "#/$defs/releaseBinding" }
+      }
+    },
+    "gitState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["present", "changes", "gaps"],
+      "properties": {
+        "present": { "type": "boolean" },
+        "readable": { "type": "boolean" },
+        "root": { "type": "string" },
+        "head": { "type": ["string", "null"] },
+        "exactTag": { "type": ["string", "null"] },
+        "branch": { "type": ["string", "null"] },
+        "origin": { "type": ["string", "null"] },
+        "dirty": { "type": ["boolean", "null"] },
+        "statusFingerprint": { "type": ["string", "null"] },
+        "truncated": { "type": "boolean" },
+        "error": { "type": "string" },
+        "changes": { "type": "array", "items": { "$ref": "#/$defs/gitChange" } },
+        "gaps": { "type": "array", "items": { "$ref": "#/$defs/evidenceGap" } }
+      }
+    },
+    "gitChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "path"],
+      "properties": {
+        "status": { "type": "string" },
+        "path": { "type": "string" },
+        "originalPath": { "type": "string" }
+      }
+    },
+    "releaseBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "baselineChannel"],
+      "properties": {
+        "state": { "type": "string" },
+        "baselineChannel": { "type": ["string", "null"] },
+        "tag": { "type": "string" }
+      }
+    },
+    "pluginEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["databasePath", "registry", "inventory", "plugins", "gaps"],
+      "properties": {
+        "databasePath": { "type": ["string", "null"] },
+        "registry": { "$ref": "#/$defs/pluginRegistryState" },
+        "inventory": { "type": "array", "items": { "$ref": "#/$defs/pluginInventory" } },
+        "plugins": { "type": "array", "items": { "$ref": "#/$defs/pluginDetail" } },
+        "gaps": { "type": "array", "items": { "$ref": "#/$defs/evidenceGap" } }
+      }
+    },
+    "pluginRegistryState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["present"],
+      "properties": {
+        "present": { "type": "boolean" },
+        "updatedAtMs": { "type": "integer", "minimum": 0 },
+        "revision": { "type": ["string", "number", "null"] },
+        "indexVersion": { "type": ["string", "number", "null"] },
+        "hostContractVersion": { "type": ["string", "number", "null"] },
+        "compatibilityRegistryVersion": { "type": ["string", "number", "null"] }
+      }
+    },
+    "pluginInventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "packageName", "version", "origin", "enabled", "configured", "bundled", "auditEligible", "dependencyAuditEligible", "manifestHashStatus", "validManifest"],
+      "properties": {
+        "id": { "type": "string" },
+        "packageName": { "type": ["string", "null"] },
+        "version": { "type": ["string", "null"] },
+        "origin": { "type": ["string", "null"] },
+        "enabled": { "type": ["boolean", "null"] },
+        "configured": { "type": "boolean" },
+        "bundled": { "type": "boolean" },
+        "auditEligible": { "type": "boolean" },
+        "dependencyAuditEligible": { "type": "boolean" },
+        "manifestHashStatus": { "type": "string" },
+        "validManifest": { "type": "boolean" }
+      }
+    },
+    "pluginDetail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "configured", "registry", "installRecord", "compatibility", "schemaConstraints", "entries", "bundled", "auditEligible", "dependencyAuditEligible", "manifestHashStatus"],
+      "properties": {
+        "id": { "type": "string" },
+        "configured": { "type": "boolean" },
+        "configuredEntryFile": { "type": ["string", "null"] },
+        "registry": { "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/pluginRegistryRecord" }] },
+        "installRecord": { "anyOf": [{ "type": "null" }, { "$ref": "#/$defs/pluginInstallRecord" }] },
+        "root": { "type": "string" },
+        "manifestPath": { "type": "string" },
+        "manifestSha256": { "type": "string" },
+        "packageJsonPath": { "type": ["string", "null"] },
+        "packageJsonSha256": { "type": ["string", "null"] },
+        "name": { "type": ["string", "null"] },
+        "packageName": { "type": ["string", "null"] },
+        "version": { "type": ["string", "null"] },
+        "repository": { "type": ["string", "null"] },
+        "homepage": { "type": ["string", "null"] },
+        "compatibility": { "$ref": "#/$defs/versionContract" },
+        "schemaConstraints": { "type": "array", "items": { "$ref": "#/$defs/schemaConstraint" } },
+        "entries": { "type": "array", "items": { "$ref": "#/$defs/pluginEntry" } },
+        "error": { "type": "string" },
+        "bundled": { "type": "boolean" },
+        "auditEligible": { "type": "boolean" },
+        "dependencyAuditEligible": { "type": "boolean" },
+        "manifestHashStatus": { "type": "string" }
+      }
+    },
+    "pluginRegistryRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pluginId": { "type": ["string", "null"] },
+        "enabled": { "type": ["boolean", "null"] },
+        "origin": { "type": ["string", "null"] },
+        "source": { "type": ["string", "null"] },
+        "setupSource": { "type": ["string", "null"] },
+        "packageName": { "type": ["string", "null"] },
+        "packageVersion": { "type": ["string", "null"] },
+        "manifestHash": { "type": ["string", "null"] },
+        "installRecordHash": { "type": ["string", "null"] }
+      }
+    },
+    "pluginInstallRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source": { "type": "string" },
+        "spec": { "type": "string" },
+        "version": { "type": "string" },
+        "resolvedName": { "type": "string" },
+        "resolvedSpec": { "type": "string" },
+        "resolvedVersion": { "type": "string" },
+        "artifactKind": { "type": "string" },
+        "artifactFormat": { "type": "string" },
+        "integrity": { "type": "string" },
+        "npmIntegrity": { "type": "string" },
+        "npmShasum": { "type": "string" },
+        "shasum": { "type": "string" },
+        "clawpackSha256": { "type": "string" },
+        "clawhubPackage": { "type": "string" },
+        "clawhubFamily": { "type": "string" },
+        "clawhubChannel": { "type": "string" },
+        "clawhubTrustDisposition": { "type": "string" },
+        "clawhubTrustScanStatus": { "type": "string" }
+      }
+    },
+    "versionContract": {
+      "anyOf": [
+        { "type": "null" },
+        { "type": "string" },
+        { "type": "array", "items": { "type": "string" } },
+        { "$ref": "#/$defs/versionContractObject" }
+      ]
+    },
+    "versionContractObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "minHostVersion": { "$ref": "#/$defs/versionContract" },
+        "minGatewayVersion": { "$ref": "#/$defs/versionContract" },
+        "pluginApi": { "$ref": "#/$defs/versionContract" },
+        "tested": { "$ref": "#/$defs/versionContract" },
+        "version": { "$ref": "#/$defs/versionContract" },
+        "channel": { "$ref": "#/$defs/versionContract" },
+        "openclawVersion": { "$ref": "#/$defs/versionContract" }
+      }
+    },
+    "schemaConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pointer"],
+      "properties": {
+        "pointer": { "type": "string" },
+        "type": { "type": "string" },
+        "minimum": { "type": "number" },
+        "maximum": { "type": "number" },
+        "exclusiveMinimum": { "type": "number" },
+        "exclusiveMaximum": { "type": "number" },
+        "minLength": { "type": "number" },
+        "maxLength": { "type": "number" },
+        "minItems": { "type": "number" },
+        "maxItems": { "type": "number" },
+        "minProperties": { "type": "number" },
+        "maxProperties": { "type": "number" },
+        "deprecated": { "type": "boolean" },
+        "required": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "enum": { "type": "array", "items": { "$ref": "#/$defs/disclosedScalar" } },
+        "default": { "$ref": "#/$defs/disclosedScalar" }
+      }
+    },
+    "disclosedScalar": {
+      "anyOf": [
+        { "type": ["string", "number", "boolean", "null"] },
+        { "$ref": "#/$defs/redactedScalar" }
+      ]
+    },
+    "redactedScalar": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["disclosure"],
+      "properties": {
+        "disclosure": { "enum": ["redacted", "redacted-secret"] },
+        "opaqueFingerprint": { "type": "string" }
+      }
+    },
+    "pluginEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entry", "insideRoot", "exists", "path"],
+      "properties": {
+        "entry": { "type": "string" },
+        "insideRoot": { "type": "boolean" },
+        "exists": { "type": "boolean" },
+        "path": { "type": "string" }
+      }
+    },
+    "operatingContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status", "facts", "unknowns"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["complete", "partial", "unknown"] },
+        "facts": { "type": "array", "items": { "$ref": "#/$defs/contextFact" } },
+        "unknowns": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true }
+      }
+    },
+    "contextFact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status", "value", "evidenceSourceIds"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["observed", "user-declared", "unknown"] },
+        "value": { "type": ["string", "number", "boolean", "null"] },
+        "evidenceSourceIds": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    },
+    "component": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "version", "releaseChannel", "provenanceStatus"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "version": { "type": ["string", "null"] },
+        "releaseChannel": { "type": ["string", "null"] },
+        "releaseChannelSource": { "type": "string" },
+        "versionPrereleaseClass": { "type": ["string", "null"] },
+        "sourceReleaseBinding": { "$ref": "#/$defs/releaseBinding" },
+        "provenanceStatus": { "enum": ["verified", "partial", "unverified", "unknown"] },
+        "pluginId": { "type": "string" },
+        "packageName": { "type": ["string", "null"] },
+        "revision": { "type": ["string", "null"] },
+        "manifestSha256": { "type": ["string", "null"] },
+        "installationOrigin": { "type": ["string", "null"] },
+        "bundled": { "type": "boolean" },
+        "dependencyAuditEligible": { "type": "boolean" }
+      }
+    },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "status": { "type": "string", "minLength": 1 },
+        "implementationVersion": { "type": "string" }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["classes", "gaps"],
+      "properties": {
+        "classes": { "type": "array", "items": { "$ref": "#/$defs/coverageClass" } },
+        "gaps": { "type": "array", "items": { "$ref": "#/$defs/coverageGap" } }
+      }
+    },
+    "coverageClass": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status", "modelDisclosure", "semanticDisclosureAuthorization", "authorizationId"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "status": { "type": "string", "minLength": 1 },
+        "modelDisclosure": { "type": "string", "minLength": 1 },
+        "semanticDisclosureAuthorization": { "enum": ["not-requested", "authorized", "denied", "not-applicable"] },
+        "authorizationId": { "type": ["string", "null"] }
+      }
+    },
+    "coverageGap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "class", "reason"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "class": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 },
+        "componentId": { "type": "string" },
+        "dataClass": { "type": "string" },
+        "summary": { "type": "string" },
+        "relatedIds": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "requiredAction": { "type": "string" },
+        "identity": { "type": "string" },
+        "sourceClass": { "type": "string" },
+        "path": { "type": "string" },
+        "paths": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "error": { "type": "string" },
+        "code": { "type": "string" },
+        "observed": { "type": "integer", "minimum": 0 },
+        "limit": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "componentId", "owner", "version", "releaseChannel", "applicableClaim", "location", "retrievedAt", "authorityTier", "revision", "sha256"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "componentId": { "type": "string", "minLength": 1 },
+        "owner": { "type": "string", "minLength": 1 },
+        "version": { "type": ["string", "null"] },
+        "releaseChannel": { "type": ["string", "null"] },
+        "applicableClaim": { "enum": ["installed-identity", "accepted-constraints", "runtime-default", "recommendation", "upgrade-contract", "plugin-provenance", "local-fork-behavior", "causal-evidence", "migration-history"] },
+        "location": { "type": "string", "minLength": 1 },
+        "retrievedAt": { "type": "string", "format": "date-time" },
+        "authorityTier": { "enum": ["normative", "shipped", "candidate", "symptom", "unknown"] },
+        "revision": { "type": ["string", "null"] },
+        "sha256": { "type": ["string", "null"], "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "baselineSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generatedForRun", "sourceIds", "unresolved"],
+      "properties": {
+        "generatedForRun": { "type": "string", "minLength": 1 },
+        "sourceIds": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "unresolved": { "type": "array", "items": { "$ref": "#/$defs/unresolvedBaseline" } }
+      }
+    },
+    "unresolvedBaseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["componentId", "reason"],
+      "properties": {
+        "componentId": { "type": "string", "minLength": 1 },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    },
+    "baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "type": "object",
+            "required": ["status"],
+            "properties": { "status": { "enum": ["established", "conflict"] } }
+          },
+          "then": { "properties": { "sourceIds": { "minItems": 1 } } }
+        }
+      ],
+      "required": ["id", "componentId", "componentVersion", "releaseChannel", "timePerspective", "operatingContextId", "kind", "status", "sourceIds", "conditions"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "componentId": { "type": "string", "minLength": 1 },
+        "componentVersion": { "type": ["string", "null"] },
+        "releaseChannel": { "type": ["string", "null"] },
+        "timePerspective": { "enum": ["operational", "upgrade"] },
+        "operatingContextId": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["recommendation", "runtime-default", "constraint", "upgrade-contract", "unknown"] },
+        "status": { "enum": ["established", "conflict", "unknown"] },
+        "sourceIds": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "conditions": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "summary": { "type": "string" }
+      }
+    },
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "identity", "name"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "identity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["namespace", "name", "version"],
+          "properties": {
+            "namespace": { "type": "string", "minLength": 1 },
+            "name": { "type": "string", "minLength": 1 },
+            "version": { "type": "string", "minLength": 1 }
+          }
+        },
+        "summary": { "type": "string" }
+      }
+    },
+    "valueRepresentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "disclosure", "value", "fingerprint", "summary"],
+      "properties": {
+        "status": { "enum": ["present", "missing", "unknown", "not-applicable"] },
+        "disclosure": { "enum": ["clear", "redacted-secret", "redacted-private", "fingerprint-only", "none"] },
+        "value": { "type": ["string", "number", "boolean", "null"] },
+        "fingerprint": { "type": ["string", "null"] },
+        "summary": { "type": "string" }
+      }
+    },
+    "configurationLayer": { "enum": ["authored", "normalized", "effective", "state-overlay", "source", "artifact", "dependency", "runtime-service", "coverage", "not-applicable"] },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "ruleId", "componentId", "componentVersion", "effectiveScope", "configurationLayer", "surface", "timePerspective", "outcome", "baselineId", "observed", "baseline", "evidenceSourceIds"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "ruleId": { "type": "string", "minLength": 1 },
+        "componentId": { "type": "string", "minLength": 1 },
+        "componentVersion": { "type": ["string", "null"] },
+        "effectiveScope": { "type": "string", "minLength": 1 },
+        "configurationLayer": { "$ref": "#/$defs/configurationLayer" },
+        "surface": { "type": "string", "minLength": 1 },
+        "timePerspective": { "enum": ["operational", "upgrade"] },
+        "outcome": { "enum": ["match", "drift", "conflict", "unknown", "not-applicable", "not-run"] },
+        "baselineId": { "type": ["string", "null"] },
+        "observed": { "$ref": "#/$defs/valueRepresentation" },
+        "baseline": { "$ref": "#/$defs/valueRepresentation" },
+        "evidenceSourceIds": { "type": "array", "items": { "type": "string" }, "minItems": 1, "uniqueItems": true },
+        "observedFingerprint": { "type": ["string", "null"] }
+      }
+    },
+    "exposure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "summary", "affectedScopes"],
+      "properties": {
+        "status": { "enum": ["known", "none", "unknown"] },
+        "summary": { "type": "string" },
+        "affectedScopes": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    },
+    "repairEffects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "summary", "classes"],
+      "properties": {
+        "status": { "enum": ["known", "none", "unknown"] },
+        "summary": { "type": "string" },
+        "classes": { "type": "array", "items": { "type": "string" }, "uniqueItems": true }
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "ruleId", "componentId", "componentVersion", "effectiveScope", "configurationLayer", "surface", "timePerspective", "driftClass", "lifecycleState", "impactSeverity", "evidenceConfidence", "causalStatus", "intentStatus", "downstreamExposure", "repairSideEffects", "observationIds", "title", "summary"],
+      "properties": {
+        "key": { "type": "string", "minLength": 1 },
+        "ruleId": { "type": "string", "minLength": 1 },
+        "componentId": { "type": "string", "minLength": 1 },
+        "componentVersion": { "type": ["string", "null"] },
+        "effectiveScope": { "type": "string", "minLength": 1 },
+        "configurationLayer": { "$ref": "#/$defs/configurationLayer" },
+        "surface": { "type": "string", "minLength": 1 },
+        "timePerspective": { "enum": ["operational", "upgrade"] },
+        "driftClass": { "enum": ["recommendation-drift", "default-delta", "constraint-violation", "lifecycle-drift", "source-drift", "artifact-drift", "resolution-drift", "inheritance-drift", "runtime-service-incoherence", "baseline-conflict", "unknown-baseline", "coverage-gap"] },
+        "lifecycleState": { "enum": ["not-applicable", "deprecated", "replaced", "removed", "no-op"] },
+        "impactSeverity": { "enum": ["info", "low", "medium", "high", "critical", "unknown"] },
+        "evidenceConfidence": { "enum": ["low", "medium", "high", "unknown"] },
+        "causalStatus": { "enum": ["confirmed-cause", "probable-contributor", "plausible-cascade", "coexisting-drift", "unassessed"] },
+        "intentStatus": { "enum": ["not-evaluated-preview", "unacknowledged", "acknowledged", "expired", "unknown"] },
+        "downstreamExposure": { "$ref": "#/$defs/exposure" },
+        "repairSideEffects": { "$ref": "#/$defs/repairEffects" },
+        "observationIds": { "type": "array", "items": { "type": "string" }, "minItems": 1, "uniqueItems": true },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string", "minLength": 1 }
+      }
+    },
+    "migrationChain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "componentId", "componentVersion", "releaseChannel", "originVersion", "status", "summary", "events"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "componentId": { "type": "string", "minLength": 1 },
+        "componentVersion": { "type": ["string", "null"] },
+        "releaseChannel": { "type": ["string", "null"] },
+        "originVersion": { "type": ["string", "null"] },
+        "status": { "enum": ["complete", "partial", "unknown-origin", "skipped-migration-window"] },
+        "summary": { "type": "string" },
+        "events": { "type": "array", "items": { "$ref": "#/$defs/migrationEvent" } }
+      }
+    },
+    "migrationEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "kind", "summary", "sourceIds"],
+      "properties": {
+        "version": { "type": ["string", "null"] },
+        "kind": { "enum": ["introduced", "renamed", "default-changed", "recommendation-changed", "deprecated", "migration-available", "removed", "no-op"] },
+        "summary": { "type": "string" },
+        "sourceIds": { "type": "array", "items": { "type": "string" }, "minItems": 1, "uniqueItems": true }
+      }
+    },
+    "repairHandoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "findingKey", "componentId", "componentVersion", "effectiveScope", "configurationLayer", "targetSurface", "proposedChange", "expectedDiff", "sideEffects", "prerequisites", "conflicts", "rollbackBoundary", "validation", "repairProof", "uncertainties", "saferAlternatives", "executable"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "findingKey": { "type": "string", "minLength": 1 },
+        "componentId": { "type": "string", "minLength": 1 },
+        "componentVersion": { "type": ["string", "null"] },
+        "effectiveScope": { "type": "string", "minLength": 1 },
+        "configurationLayer": { "$ref": "#/$defs/configurationLayer" },
+        "targetSurface": { "type": "string", "minLength": 1 },
+        "proposedChange": { "type": "string", "minLength": 1 },
+        "expectedDiff": { "type": "string", "minLength": 1 },
+        "sideEffects": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "prerequisites": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "conflicts": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "rollbackBoundary": { "type": "string", "minLength": 1 },
+        "validation": { "type": "string", "minLength": 1 },
+        "repairProof": { "type": "string", "minLength": 1 },
+        "uncertainties": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "saferAlternatives": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "executable": { "const": false }
+      }
+    },
+    "redaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy", "modelVisibleRawValues", "secretValuesHashed"],
+      "properties": {
+        "policy": { "type": "string", "minLength": 1 },
+        "modelVisibleRawValues": { "const": false },
+        "secretValuesHashed": { "const": false },
+        "clearConfigScalars": { "type": "integer", "minimum": 0 },
+        "redactedConfigScalars": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "networkFreshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["used", "authorized", "sourceClasses", "ownerDomains", "retrievedAt"],
+      "properties": {
+        "used": { "type": "boolean" },
+        "authorized": { "type": "boolean" },
+        "sourceClasses": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "ownerDomains": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "retrievedAt": { "type": ["string", "null"], "format": "date-time" }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "severity", "message"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "severity": { "enum": ["info", "warning", "error"] },
+        "message": { "type": "string" }
+      }
+    }
+  }
+}

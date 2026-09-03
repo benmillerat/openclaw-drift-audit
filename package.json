@@ -1,0 +1,22 @@
+{
+  "name": "openclaw-drift-audit-skill",
+  "version": "0.1.0",
+  "description": "Independent Codex skill for version-aware, audit-only OpenClaw drift analysis.",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benmillerat/openclaw-drift-audit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/benmillerat/openclaw-drift-audit/issues"
+  },
+  "homepage": "https://github.com/benmillerat/openclaw-drift-audit#readme",
+  "scripts": {
+    "test": "node --test scripts/tests/*.test.mjs"
+  }
+}

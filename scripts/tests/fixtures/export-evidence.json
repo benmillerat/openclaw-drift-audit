@@ -1,0 +1,73 @@
+{
+  "evidenceSchemaVersion": "0.1.0",
+  "kind": "openclaw-drift-evidence",
+  "run": {
+    "id": "run-fixture",
+    "profile": "offline-core",
+    "metadataOnly": false,
+    "observationWindow": {
+      "startedAt": "2026-09-03T00:00:00.000Z",
+      "endedAt": "2026-09-03T00:00:00.000Z"
+    },
+    "intentionalTargetMutation": false,
+    "networkUsed": false,
+    "persistentArtifactsCreated": false
+  },
+  "target": {
+    "status": "selected",
+    "configPath": "$CONFIG/openclaw.json",
+    "selectedPackageRoot": "$PACKAGE",
+    "packages": [
+      {
+        "rootDir": "$PACKAGE",
+        "version": "2026.8.2",
+        "installKind": "source-checkout",
+        "releaseChannel": "stable"
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "openclaw:2026.8.2",
+      "kind": "openclaw",
+      "version": "2026.8.2"
+    }
+  ],
+  "coverage": {
+    "classes": [
+      {
+        "id": "configuration",
+        "status": "examined",
+        "modelDisclosure": "allowlisted-redacted-structure"
+      }
+    ],
+    "gaps": []
+  },
+  "dependencies": [],
+  "source": {
+    "git": {
+      "present": false
+    }
+  },
+  "migrationSourceInventory": [],
+  "configuration": {
+    "status": "resolved",
+    "root": "$CONFIG/openclaw.json",
+    "authoredEntries": [],
+    "resolvedEntries": [],
+    "resolvedSameAsAuthored": false,
+    "includeFiles": [],
+    "includeEdges": [],
+    "diagnostics": []
+  },
+  "plugins": {
+    "plugins": [],
+    "gaps": []
+  },
+  "redaction": {
+    "policy": "allowlist-plus-secret-deny",
+    "modelVisibleRawValues": false,
+    "secretValuesHashed": false
+  },
+  "consistency": []
+}

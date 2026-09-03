@@ -1,0 +1,81 @@
+name: Bug report
+description: Report a reproducible defect using sanitized evidence only.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Never paste secrets, identities, private paths, raw configuration, logs, memories, transcripts, databases, or unredacted audit artifacts.
+
+  - type: input
+    id: skill-version
+    attributes:
+      label: Skill version or commit
+      placeholder: v0.1.0 or a commit SHA
+    validations:
+      required: true
+
+  - type: input
+    id: openclaw-version
+    attributes:
+      label: OpenClaw version
+      placeholder: 2026.8.2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: installation-kind
+    attributes:
+      label: Installation kind
+      options:
+        - Package-managed
+        - Source checkout
+        - Nix
+        - Container
+        - Other or unknown
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Sanitized environment
+      description: Operating system, architecture, Node version, and selected audit profile. Do not include hostnames or paths.
+      placeholder: macOS arm64, Node 26, offline-core
+    validations:
+      required: true
+
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Observed behavior
+      description: Include sanitized errors, capability status, and Coverage Gap IDs.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal synthetic reproduction
+      description: Prefer a synthetic fixture over installation data.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy confirmation
+      options:
+        - label: I removed secrets, personal identifiers, private paths, and private OpenClaw content.
+          required: true
+        - label: This report does not describe an undisclosed security vulnerability.
+          required: true

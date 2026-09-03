@@ -1,0 +1,24 @@
+{
+  "name": "shrinkwrap-fixture",
+  "version": "1.0.0",
+  "lockfileVersion": 2,
+  "packages": {
+    "": {
+      "name": "shrinkwrap-fixture",
+      "version": "1.0.0",
+      "dependencies": {
+        "alpha": "1.2.3"
+      }
+    },
+    "node_modules/alpha": {
+      "version": "1.2.3",
+      "integrity": "sha512-fixture-alpha"
+    }
+  },
+  "dependencies": {
+    "alpha": {
+      "version": "1.2.3",
+      "integrity": "sha512-fixture-alpha"
+    }
+  }
+}

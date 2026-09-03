@@ -1,0 +1,44 @@
+name: Feature request
+description: Propose a bounded audit capability or compatibility adapter.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What audit gap or real installation shape is not covered?
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Public evidence
+      description: Link versioned owner documentation, source, releases, issues, or pull requests. Do not paste private installation data.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Proposed capability boundary
+      description: State required inputs, expected output, side effects, and Coverage Gaps.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety confirmation
+      options:
+        - label: The proposal keeps Audit and Repair as separate authorization boundaries.
+          required: true
+        - label: The proposal contains no secrets, identities, private paths, or private OpenClaw content.
+          required: true

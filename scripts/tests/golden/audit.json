@@ -1,0 +1,262 @@
+{
+  "baselineSnapshot": {
+    "generatedForRun": "run-fixture",
+    "sourceIds": [
+      "source:fixture"
+    ],
+    "unresolved": []
+  },
+  "baselines": [
+    {
+      "componentId": "openclaw:2026.8.2",
+      "componentVersion": "2026.8.2",
+      "conditions": [],
+      "id": "baseline:fixture",
+      "kind": "recommendation",
+      "operatingContextId": "context:fixture",
+      "releaseChannel": "stable",
+      "sourceIds": [
+        "source:fixture"
+      ],
+      "status": "established",
+      "timePerspective": "operational"
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "config-resolution",
+      "status": "verified"
+    }
+  ],
+  "components": [
+    {
+      "id": "openclaw:2026.8.2",
+      "installationOrigin": "source-checkout",
+      "kind": "openclaw",
+      "manifestSha256": null,
+      "packageName": null,
+      "provenanceStatus": "unknown",
+      "releaseChannel": "stable",
+      "revision": null,
+      "version": "2026.8.2"
+    }
+  ],
+  "configurationSummary": {
+    "authoredEntries": [],
+    "authoredEntryCount": 0,
+    "diagnostics": [],
+    "includeEdges": [],
+    "includeFiles": [],
+    "resolvedEntries": [],
+    "resolvedEntryCount": 0,
+    "resolvedSameAsAuthored": false,
+    "root": "$CONFIG/openclaw.json",
+    "status": "resolved"
+  },
+  "consistency": [],
+  "coverage": {
+    "classes": [
+      {
+        "authorizationId": null,
+        "id": "configuration",
+        "modelDisclosure": "allowlisted-redacted-structure",
+        "semanticDisclosureAuthorization": "not-requested",
+        "status": "examined"
+      }
+    ],
+    "gaps": []
+  },
+  "dependencies": [],
+  "diagnostics": [],
+  "export": {
+    "authorization": "not-required",
+    "delivery": "interactive-stdout",
+    "directoryFingerprint": null,
+    "localPathExportSupported": false,
+    "mode": "portable-redacted",
+    "retention": "not-persisted"
+  },
+  "findings": [
+    {
+      "causalStatus": "coexisting-drift",
+      "componentId": "openclaw:2026.8.2",
+      "componentVersion": "2026.8.2",
+      "configurationLayer": "authored",
+      "downstreamExposure": {
+        "affectedScopes": [],
+        "status": "unknown",
+        "summary": "No downstream exposure was established."
+      },
+      "driftClass": "recommendation-drift",
+      "effectiveScope": "global",
+      "evidenceConfidence": "high",
+      "impactSeverity": "medium",
+      "intentStatus": "unacknowledged",
+      "key": "finding:aa091bbe6b8a9f56cc0253de",
+      "lifecycleState": "not-applicable",
+      "observationIds": [
+        "observation:fixture"
+      ],
+      "repairSideEffects": {
+        "classes": [],
+        "status": "unknown",
+        "summary": "Repair effects were not evaluated."
+      },
+      "ruleId": "rule:fixture",
+      "summary": "The configured timeout is outside the version-matched recommendation.",
+      "surface": "/agents/defaults/timeoutSeconds",
+      "timePerspective": "operational",
+      "title": "Timeout differs from recommendation"
+    }
+  ],
+  "kind": "openclaw-drift-audit",
+  "migrationChains": [],
+  "migrationSourceInventory": [],
+  "networkFreshness": {
+    "authorized": false,
+    "ownerDomains": [],
+    "retrievedAt": null,
+    "sourceClasses": [],
+    "used": false
+  },
+  "observations": [
+    {
+      "baseline": {
+        "disclosure": "clear",
+        "fingerprint": null,
+        "status": "present",
+        "summary": "Recommended timeout",
+        "value": 600
+      },
+      "baselineId": "baseline:fixture",
+      "componentId": "openclaw:2026.8.2",
+      "componentVersion": "2026.8.2",
+      "configurationLayer": "authored",
+      "effectiveScope": "global",
+      "evidenceSourceIds": [
+        "source:fixture"
+      ],
+      "id": "observation:fixture",
+      "observed": {
+        "disclosure": "clear",
+        "fingerprint": null,
+        "status": "present",
+        "summary": "Configured timeout",
+        "value": 3600
+      },
+      "observedFingerprint": "opaque-fixture",
+      "outcome": "drift",
+      "ruleId": "rule:fixture",
+      "surface": "/agents/defaults/timeoutSeconds",
+      "timePerspective": "operational"
+    }
+  ],
+  "operatingContext": {
+    "facts": [],
+    "id": "context:fixture",
+    "status": "partial",
+    "unknowns": [
+      "workload-priority"
+    ]
+  },
+  "plugins": {
+    "databasePath": null,
+    "gaps": [],
+    "inventory": [],
+    "plugins": [],
+    "registry": {
+      "present": false
+    }
+  },
+  "preview": true,
+  "redaction": {
+    "modelVisibleRawValues": false,
+    "policy": "allowlist-plus-secret-deny",
+    "secretValuesHashed": false
+  },
+  "repairHandoffs": [],
+  "rules": [
+    {
+      "id": "rule:fixture",
+      "identity": {
+        "name": "timeout-recommendation",
+        "namespace": "openclaw-drift-audit",
+        "version": "0.1.0"
+      },
+      "name": "timeout-recommendation"
+    }
+  ],
+  "run": {
+    "auditLogicVersion": "0.1.1",
+    "budgets": {
+      "ioBytes": {
+        "coverageGapId": null,
+        "limit": 1048576,
+        "status": "within-budget",
+        "used": 4096
+      },
+      "semanticItems": {
+        "coverageGapId": null,
+        "limit": 100,
+        "status": "within-budget",
+        "used": 1
+      },
+      "timeMs": {
+        "coverageGapId": null,
+        "limit": 60000,
+        "status": "within-budget",
+        "used": 25
+      }
+    },
+    "id": "run-fixture",
+    "intentionalTargetMutation": false,
+    "metadataOnly": false,
+    "networkUsed": false,
+    "observationWindow": {
+      "endedAt": "2026-09-03T00:00:00.000Z",
+      "startedAt": "2026-09-03T00:00:00.000Z"
+    },
+    "persistentArtifactsCreated": false,
+    "profiles": [
+      "offline-core"
+    ]
+  },
+  "schemaVersion": "0.1.1",
+  "sourceState": {
+    "git": {
+      "changes": [],
+      "gaps": [],
+      "present": false
+    }
+  },
+  "sources": [
+    {
+      "applicableClaim": "recommendation",
+      "authorityTier": "normative",
+      "componentId": "openclaw:2026.8.2",
+      "id": "source:fixture",
+      "location": "official-tag",
+      "owner": "OpenClaw",
+      "releaseChannel": "stable",
+      "retrievedAt": "2026-09-03T00:00:00.000Z",
+      "revision": null,
+      "sha256": null,
+      "version": "2026.8.2"
+    }
+  ],
+  "target": {
+    "configPath": "$CONFIG/openclaw.json",
+    "launchers": [],
+    "packages": [
+      {
+        "installKind": "source-checkout",
+        "lifecycleGuards": [],
+        "releaseChannel": "stable",
+        "rootDir": "$PACKAGE",
+        "version": "2026.8.2"
+      }
+    ],
+    "selectedPackageRoot": "$PACKAGE",
+    "status": "selected"
+  }
+}

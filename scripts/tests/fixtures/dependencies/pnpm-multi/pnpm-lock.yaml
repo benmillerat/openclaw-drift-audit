@@ -1,0 +1,35 @@
+---
+lockfileVersion: '9.0'
+
+importers:
+
+  .:
+    configDependencies: {}
+    packageManagerDependencies:
+      pnpm:
+        specifier: 12.1.0
+        version: 12.1.0
+
+packages: {}
+snapshots: {}
+
+---
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+
+importers:
+
+  .:
+    dependencies:
+      alpha:
+        specifier: ^1.0.0
+        version: 1.2.3(peer-only@3.1.0)
+    optionalDependencies:
+      '@scope/beta':
+        specifier: ~2.1.0
+        version: 2.1.4
+
+packages: {}
+snapshots: {}

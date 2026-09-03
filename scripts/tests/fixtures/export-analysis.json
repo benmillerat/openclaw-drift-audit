@@ -1,0 +1,132 @@
+{
+  "operatingContext": {
+    "id": "context:fixture",
+    "status": "partial",
+    "facts": [],
+    "unknowns": ["workload-priority"]
+  },
+  "budgets": {
+    "timeMs": { "limit": 60000, "used": 25, "status": "within-budget", "coverageGapId": null },
+    "ioBytes": { "limit": 1048576, "used": 4096, "status": "within-budget", "coverageGapId": null },
+    "semanticItems": { "limit": 100, "used": 1, "status": "within-budget", "coverageGapId": null }
+  },
+  "capabilities": [
+    {
+      "id": "config-resolution",
+      "status": "verified"
+    }
+  ],
+  "sources": [
+    {
+      "id": "source:fixture",
+      "componentId": "openclaw:2026.8.2",
+      "owner": "OpenClaw",
+      "version": "2026.8.2",
+      "releaseChannel": "stable",
+      "applicableClaim": "recommendation",
+      "location": "official-tag",
+      "retrievedAt": "2026-09-03T00:00:00.000Z",
+      "authorityTier": "normative",
+      "revision": null,
+      "sha256": null
+    }
+  ],
+  "baselines": [
+    {
+      "id": "baseline:fixture",
+      "componentId": "openclaw:2026.8.2",
+      "componentVersion": "2026.8.2",
+      "releaseChannel": "stable",
+      "timePerspective": "operational",
+      "operatingContextId": "context:fixture",
+      "kind": "recommendation",
+      "sourceIds": [
+        "source:fixture"
+      ],
+      "status": "established",
+      "conditions": []
+    }
+  ],
+  "rules": [
+    {
+      "id": "rule:fixture",
+      "name": "timeout-recommendation",
+      "version": "0.1.0"
+    }
+  ],
+  "observations": [
+    {
+      "id": "observation:fixture",
+      "ruleId": "rule:fixture",
+      "componentId": "openclaw:2026.8.2",
+      "componentVersion": "2026.8.2",
+      "effectiveScope": "global",
+      "configurationLayer": "authored",
+      "surface": "/agents/defaults/timeoutSeconds",
+      "timePerspective": "operational",
+      "outcome": "drift",
+      "baselineId": "baseline:fixture",
+      "observed": {
+        "status": "present",
+        "disclosure": "clear",
+        "value": 3600,
+        "fingerprint": null,
+        "summary": "Configured timeout"
+      },
+      "baseline": {
+        "status": "present",
+        "disclosure": "clear",
+        "value": 600,
+        "fingerprint": null,
+        "summary": "Recommended timeout"
+      },
+      "evidenceSourceIds": ["source:fixture"],
+      "observedFingerprint": "opaque-fixture"
+    }
+  ],
+  "findings": [
+    {
+      "ruleId": "rule:fixture",
+      "componentId": "openclaw:2026.8.2",
+      "componentVersion": "2026.8.2",
+      "effectiveScope": "global",
+      "configurationLayer": "authored",
+      "surface": "/agents/defaults/timeoutSeconds",
+      "timePerspective": "operational",
+      "driftClass": "recommendation-drift",
+      "lifecycleState": "not-applicable",
+      "observationIds": [
+        "observation:fixture"
+      ],
+      "impactSeverity": "medium",
+      "evidenceConfidence": "high",
+      "causalStatus": "coexisting-drift",
+      "intentStatus": "unacknowledged",
+      "downstreamExposure": {
+        "status": "unknown",
+        "summary": "No downstream exposure was established.",
+        "affectedScopes": []
+      },
+      "repairSideEffects": {
+        "status": "unknown",
+        "summary": "Repair effects were not evaluated.",
+        "classes": []
+      },
+      "title": "Timeout differs from recommendation",
+      "summary": "The configured timeout is outside the version-matched recommendation."
+    }
+  ],
+  "migrationChains": [],
+  "coverageGaps": [],
+  "unresolvedBaselines": [],
+  "disclosures": [],
+  "networkFreshness": {
+    "used": false,
+    "authorized": false,
+    "sourceClasses": [],
+    "ownerDomains": [],
+    "retrievedAt": null
+  },
+  "repairHandoffs": [],
+  "diagnostics": []
+}

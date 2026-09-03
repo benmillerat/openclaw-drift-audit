@@ -1,0 +1,7 @@
+interface:
+  display_name: "OpenClaw Drift Audit"
+  short_description: "Audit OpenClaw drift without applying repairs"
+  default_prompt: "Use $openclaw-drift-audit to audit this OpenClaw installation for version-aware configuration drift without changing it."
+
+policy:
+  allow_implicit_invocation: true

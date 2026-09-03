@@ -1,0 +1,18 @@
+{
+  "name": "@example/openclaw-plugin",
+  "version": "1.2.3",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/example/openclaw-plugin.git"
+  },
+  "openclaw": {
+    "extensions": ["./dist/index.js"],
+    "compat": {
+      "pluginApi": ">=2026.8.1",
+      "tested": ["2026.8.1", "2026.8.2"]
+    }
+  },
+  "dependencies": {
+    "fixture-plugin-dependency": "~2.1.0"
+  }
+}

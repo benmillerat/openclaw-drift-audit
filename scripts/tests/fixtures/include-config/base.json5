@@ -1,0 +1,5 @@
+{
+  gateway: { mode: "local", bind: "loopback" },
+  plugins: { allow: ["example-plugin"] },
+  list: ["base"],
+}

@@ -1,0 +1,29 @@
+# Changelog
+
+All notable changes to this project are documented here. Dates use ISO 8601.
+
+## [Unreleased]
+
+- No unreleased functional changes.
+
+## [0.1.0] - 2026-09-03
+
+### Added
+
+- Public Preview Codex skill and UI metadata.
+- Deterministic offline collector for installation, configuration, plugin, dependency, source, artifact, and migration evidence.
+- Scoped evidence slicer for installation/configuration, component/dependency, and source/migration analysis roles.
+- Closed `audit.json` schema `0.1.1` and deterministic `report.md` renderer.
+- Portable-redacted persistent export with target write guards and transient semantic analysis input.
+- Dynamic Baseline, Operating Context, Coverage Gap, Migration Chain, Compatibility Cascade, and non-executing Repair Handoff contracts.
+- Regression fixtures for OpenClaw 2026.8.2 and its immediate stable predecessor 2026.8.1.
+- Repository documentation, contribution guidance, private security reporting, issue forms, and least-privilege CI.
+
+### Security
+
+- Added allowlist-based disclosure, secret denial, path aliasing, private JSON Pointer identity aliasing, bounded parsers, query-only SQLite access, and fail-closed export validation.
+- Prohibited target-code execution and native OpenClaw commands in the Preview Offline Core.
+
+### Verified
+
+- Passed 91 automated tests, 32 JavaScript syntax checks, the Codex skill validator, two macOS real-installation gates, independent forward testing, privacy canaries, and before/after target fingerprint checks.

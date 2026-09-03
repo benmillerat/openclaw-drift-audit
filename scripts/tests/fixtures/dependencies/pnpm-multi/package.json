@@ -1,0 +1,11 @@
+{
+  "name": "pnpm-fixture",
+  "version": "1.0.0",
+  "packageManager": "pnpm@12.1.0",
+  "dependencies": {
+    "alpha": "^1.0.0"
+  },
+  "optionalDependencies": {
+    "@scope/beta": "~2.1.0"
+  }
+}

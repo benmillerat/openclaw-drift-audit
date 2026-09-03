@@ -1,0 +1,14 @@
+{
+  "name": "openclaw",
+  "version": "2026.8.2",
+  "openclaw": {
+    "schemaVersions": { "state": 15, "agent": 19 }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openclaw/openclaw.git"
+  },
+  "dependencies": {
+    "fixture-dependency": "^1.2.0"
+  }
+}

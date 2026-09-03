@@ -1,0 +1,8 @@
+{
+  "name": "shrinkwrap-fixture",
+  "version": "1.0.0",
+  "packageManager": "npm@10.9.0",
+  "dependencies": {
+    "alpha": "1.2.3"
+  }
+}
