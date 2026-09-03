@@ -12,6 +12,11 @@ All notable changes to this project are documented here. Dates use ISO 8601.
 
 - Include synthetic installed-package manifests required by dependency and collector tests in clean repository checkouts.
 
+### Repository operations
+
+- 2026-09-03: Added repository metadata and topics, enabled automatic branch cleanup, retained read-only Actions token permissions, and enabled Dependabot alerts and security updates.
+- 2026-09-03: Confirmed that branch rulesets, secret scanning, push protection, and private vulnerability reporting require either public visibility or a GitHub plan upgrade for this repository; visibility remains private.
+
 ## [0.1.0] - 2026-09-03
 
 ### Added
